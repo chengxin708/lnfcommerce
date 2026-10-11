@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>记忆翻牌 · LNF Commerce</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🃏</text></svg>" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    .deck {
+      width: min(100%, 460px);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .mcard {
+      aspect-ratio: 3 / 4;
+      perspective: 600px;
+      cursor: pointer;
+      border: 0;
+      padding: 0;
+      background: none;
+    }
+    .mcard .inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.35s;
+      transform-style: preserve-3d;
+    }
+    .mcard.flipped .inner, .mcard.matched .inner { transform: rotateY(180deg); }
+    .mcard .face {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      backface-visibility: hidden;
+      font-size: clamp(26px, 8vw, 40px);
+    }
+    .mcard .back { background: linear-gradient(135deg, #7c5cff, #20d3c2); color: rgba(255,255,255,0.7); font-size: 22px; font-weight: 800; }
+    .mcard .front { background: var(--bg-soft); border: 1px solid var(--border); transform: rotateY(180deg); }
+    .mcard.matched .front { border-color: var(--primary-2); box-shadow: 0 0 0 2px rgba(32,211,194,0.3) inset; }
+  </style>
+</head>
+<body class="play-page">
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">LNF</span><span class="logo-text">LNF Commerce</span></a>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="../index.html#catalog-section">← 返回作品库</a>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">☀️</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="play-main">
+    <div class="container">
+      <div class="play-head">
+        <div><h1>🃏 记忆翻牌</h1><p>每次翻开两张牌，找出所有相同的配对。</p></div>
+        <div class="scoreboard">
+          <div class="score"><small>步数</small><b id="moves">0</b></div>
+          <div class="score"><small>用时</small><b id="time">0s</b></div>
+          <div class="score"><small>最佳</small><b id="best">—</b></div>
+        </div>
+      </div>
+      <div class="stage"><div class="deck" id="deck"></div></div>
+      <div class="controls"><button class="btn btn-primary" id="newBtn">重新洗牌</button></div>
+      <p class="help">最佳成绩按步数记录，步数越少越好</p>
+    </div>
+  </main>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    (function () {
+      const ICONS = ["🍎", "🚀", "🐱", "🎧", "🌈", "⚽", "🍩", "🦄"];
+      const deckEl = document.getElementById("deck");
+      const movesEl = document.getElementById("moves");
+      const timeEl = document.getElementById("time");
+      const bestEl = document.getElementById("best");
+      let open, matched, moves, seconds, timer, lock;
+      let best = Number(LNF.store.get("lnf-memory-best") || 0);
+      if (best) bestEl.textContent = best;
+
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function newGame() {
+        clearInterval(timer);
+        timer = null;
+        open = [];
+        matched = 0;
+        moves = 0;
+        seconds = 0;
+        lock = false;
+        movesEl.textContent = 0;
+        timeEl.textContent = "0s";
+        deckEl.innerHTML = "";
+        shuffle([...ICONS, ...ICONS]).forEach((icon) => {
+          const b = document.createElement("button");
+          b.className = "mcard";
+          b.dataset.icon = icon;
+          b.setAttribute("aria-label", "卡牌");
+          b.innerHTML = `<div class="inner"><div class="face back">LNF</div><div class="face front">${icon}</div></div>`;
+          b.addEventListener("click", () => flip(b));
+          deckEl.appendChild(b);
+        });
+      }
+
+      function flip(card) {
+        if (lock || card.classList.contains("flipped") || card.classList.contains("matched")) return;
+        if (!timer) timer = setInterval(() => (timeEl.textContent = ++seconds + "s"), 1000);
+        card.classList.add("flipped");
+        open.push(card);
+        if (open.length < 2) return;
+
+        moves++;
+        movesEl.textContent = moves;
+        const [a, b] = open;
+        if (a.dataset.icon === b.dataset.icon) {
+          a.classList.add("matched");
+          b.classList.add("matched");
+          open = [];
+          matched += 2;
+          if (matched === ICONS.length * 2) win();
+        } else {
+          lock = true;
+          setTimeout(() => {
+            a.classList.remove("flipped");
+            b.classList.remove("flipped");
+            open = [];
+            lock = false;
+          }, 700);
+        }
+      }
+
+      function win() {
+        clearInterval(timer);
+        if (!best || moves < best) {
+          best = moves;
+          bestEl.textContent = best;
+          LNF.store.set("lnf-memory-best", best);
+          LNF.toast(`🏆 新纪录！${moves} 步 · ${seconds} 秒`);
+        } else {
+          LNF.toast(`🎉 完成！${moves} 步 · ${seconds} 秒`);
+        }
+      }
+
+      document.getElementById("newBtn").addEventListener("click", newGame);
+      newGame();
+    })();
+  </script>
+</body>
+</html>

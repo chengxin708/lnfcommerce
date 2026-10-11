@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>今天吃什么 · LNF Commerce</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎲</text></svg>" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    .picker { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; width: 100%; align-items: center; }
+    .wheel-box { position: relative; width: min(100%, 360px); aspect-ratio: 1; margin: 0 auto; }
+    .wheel-box canvas { width: 100%; height: 100%; transition: transform 4s cubic-bezier(0.17, 0.67, 0.15, 1); }
+    .pointer {
+      position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 14px solid transparent; border-right: 14px solid transparent;
+      border-top: 26px solid #ff5c7a; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4)); z-index: 2;
+    }
+    .result { text-align: center; font-size: 26px; font-weight: 800; min-height: 40px; margin-top: 14px; }
+    .side textarea { min-height: 200px; }
+    .presets { display: flex; gap: 8px; flex-wrap: wrap; }
+    @media (max-width: 720px) { .picker { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body class="play-page">
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo"><span class="logo-mark">LNF</span><span class="logo-text">LNF Commerce</span></a>
+      <div class="nav-actions">
+        <a class="btn btn-ghost btn-sm" href="../index.html#catalog-section">← 返回作品库</a>
+        <button class="icon-btn" id="themeBtn" aria-label="切换主题">☀️</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="play-main">
+    <div class="container">
+      <div class="play-head">
+        <div><h1>🎲 今天吃什么</h1><p>纠结的时候，交给转盘决定。<span class="status status-beta">公测中</span></p></div>
+      </div>
+      <div class="stage">
+        <div class="picker">
+          <div>
+            <div class="wheel-box">
+              <div class="pointer"></div>
+              <canvas id="wheel" width="600" height="600"></canvas>
+            </div>
+            <div class="result" id="result">点击「转一转」</div>
+            <div class="controls"><button class="btn btn-primary" id="spinBtn">🎯 转一转</button></div>
+          </div>
+          <div class="side form">
+            <label>选项（每行一个，最多 16 个）</label>
+            <textarea id="options"></textarea>
+            <div class="presets">
+              <button class="chip" data-preset="food">🍜 吃饭</button>
+              <button class="chip" data-preset="drink">🧋 饮品</button>
+              <button class="chip" data-preset="weekend">🏖️ 周末去哪</button>
+              <button class="chip" data-preset="yesno">✅ 做不做</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="help">选项会自动保存在本地，下次打开还在</p>
+    </div>
+  </main>
+
+  <script src="../assets/js/main.js"></script>
+  <script>
+    (function () {
+      const PRESETS = {
+        food: "火锅\n麻辣烫\n黄焖鸡\n兰州拉面\n寿司\n汉堡\n螺蛳粉\n饺子",
+        drink: "珍珠奶茶\n美式咖啡\n柠檬茶\n拿铁\n果茶\n气泡水",
+        weekend: "宅家追剧\n去公园\n看电影\n逛商场\n爬山\n约朋友吃饭",
+        yesno: "做！\n不做\n再想想",
+      };
+      const PALETTE = ["#7c5cff", "#20d3c2", "#ff5c7a", "#ffb547", "#5b8cff", "#c05cff", "#1fbfa5", "#ff7a45"];
+      const canvas = document.getElementById("wheel");
+      const ctx = canvas.getContext("2d");
+      const ta = document.getElementById("options");
+      const resultEl = document.getElementById("result");
+      const spinBtn = document.getElementById("spinBtn");
+      let rotation = 0;
+      let spinning = false;
+
+      ta.value = LNF.store.get("lnf-picker") || PRESETS.food;
+
+      function options() {
+        return ta.value.split("\n").map((s) => s.trim()).filter(Boolean).slice(0, 16);
+      }
+
+      function draw() {
+        const opts = options();
+        const r = canvas.width / 2;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (!opts.length) return;
+        const arc = (Math.PI * 2) / opts.length;
+        opts.forEach((txt, i) => {
+          // 从正上方开始顺时针绘制
+          const a0 = -Math.PI / 2 + i * arc;
+          ctx.beginPath();
+          ctx.moveTo(r, r);
+          ctx.arc(r, r, r - 4, a0, a0 + arc);
+          ctx.closePath();
+          ctx.fillStyle = PALETTE[i % PALETTE.length];
+          ctx.fill();
+          ctx.strokeStyle = "rgba(255,255,255,0.6)";
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.save();
+          ctx.translate(r, r);
+          ctx.rotate(a0 + arc / 2);
+          ctx.fillStyle = "#fff";
+          ctx.font = "bold 30px sans-serif";
+          ctx.textAlign = "right";
+          ctx.textBaseline = "middle";
+          ctx.fillText(txt.length > 6 ? txt.slice(0, 6) + "…" : txt, r - 28, 0);
+          ctx.restore();
+        });
+        ctx.beginPath();
+        ctx.arc(r, r, 40, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+      }
+
+      function spin() {
+        const opts = options();
+        if (spinning) return;
+        if (opts.length < 2) return LNF.toast("至少需要 2 个选项哦");
+        spinning = true;
+        resultEl.textContent = "转动中…";
+        const pick = Math.floor(Math.random() * opts.length);
+        const arc = 360 / opts.length;
+        // 让被选中扇区（随机落点，避开边界）停在顶部指针处
+        const within = arc * (0.15 + Math.random() * 0.7);
+        const target = 360 - (pick * arc + within);
+        const current = ((rotation % 360) + 360) % 360;
+        rotation += 360 * 6 + ((target - current + 360) % 360);
+        canvas.style.transform = `rotate(${rotation}deg)`;
+        setTimeout(() => {
+          spinning = false;
+          resultEl.textContent = `🎉 ${opts[pick]}`;
+        }, 4100);
+      }
+
+      ta.addEventListener("input", () => {
+        LNF.store.set("lnf-picker", ta.value);
+        draw();
+      });
+      document.querySelectorAll("[data-preset]").forEach((b) =>
+        b.addEventListener("click", () => {
+          ta.value = PRESETS[b.dataset.preset];
+          LNF.store.set("lnf-picker", ta.value);
+          draw();
+        })
+      );
+      spinBtn.addEventListener("click", spin);
+      draw();
+    })();
+  </script>
+</body>
+</html>
