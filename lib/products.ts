@@ -1,9 +1,10 @@
 // Catalog of everything LNF COMMERCE INC publishes. Add one entry per app or game.
 // Apps get a page at /apps/<slug>, games at /games/<slug> — use that URL as the
-// website / marketing URL in App Store Connect, Play Console and TikTok.
+// website / marketing URL in App Store Connect, Play Console and TikTok, unless the
+// product has its own website.
 export type Product = {
   slug: string; // URL segment, lowercase-with-dashes; keep it stable once live
-  name: string; // must match the store listing title
+  name: string; // store listing title, or its brand part (e.g. "BreezeBiz" for "BreezeBiz: Bills & Bookings")
   kind: "app" | "game";
   tagline: string;
   description: string;
@@ -16,9 +17,33 @@ export type Product = {
   packageName?: string; // Android application ID / iOS bundle ID, e.g. com.lnfcommerce.example
   // Data this product collects beyond the company Privacy Policy (shown on its page).
   extraData?: string[];
+  // Set these only when the product has its own website, policies or support address.
+  // Its page, and the company Privacy, Terms and Delete-account pages, then point there.
+  website?: string;
+  privacyUrl?: string;
+  termsUrl?: string;
+  deleteAccountUrl?: string;
+  supportEmail?: string;
 };
 
-export const products: Product[] = [];
+export const products: Product[] = [
+  {
+    slug: "breezebiz",
+    name: "BreezeBiz",
+    kind: "app",
+    tagline: "Run your shop from your phone.",
+    description:
+      "BreezeBiz is the app for one-person shops: nail techs, home chefs, resellers, repair pros and other small businesses. Each shop gets its own page at one link, where customers book appointments, order products or the weekly menu, and message the owner. From their phone, owners write up bills and text them to customers, mark them paid by Zelle, Venmo or cash, keep one calendar, and see simple reports for tax time. A built-in shop assistant drafts bookings and bills from a typed or spoken request. In English and Chinese. Free to start, no card needed.",
+    status: "live", // web app is live; Play and App Store listings are not public yet
+    links: {},
+    packageName: "app.breezebiz.provider",
+    website: "https://breezebiz.app",
+    privacyUrl: "https://breezebiz.app/privacy",
+    termsUrl: "https://breezebiz.app/terms",
+    deleteAccountUrl: "https://breezebiz.app/delete-account",
+    supportEmail: "support@breezebiz.app",
+  },
+];
 
 export function productPath(p: Pick<Product, "kind" | "slug">) {
   return `/${p.kind === "game" ? "games" : "apps"}/${p.slug}`;

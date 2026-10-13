@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { OwnPolicies } from "@/components/OwnPolicies";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -21,6 +22,10 @@ export default function PrivacyPage() {
         If an app collects anything beyond what is described here, its page on this website lists
         it.
       </p>
+
+      <OwnPolicies field="privacyUrl">
+        <p>These apps have their own privacy policy, which applies to them instead of this one:</p>
+      </OwnPolicies>
 
       <h2>Information we collect</h2>
       <h3>Information from the platform you use</h3>

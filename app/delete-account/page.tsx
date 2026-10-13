@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { OwnPolicies } from "@/components/OwnPolicies";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -16,6 +17,12 @@ export default function DeleteAccountPage() {
         For all apps and games published by {site.legalName} on the App Store, Google Play, TikTok
         and other platforms.
       </p>
+
+      <OwnPolicies field="deleteAccountUrl">
+        <p>
+          These apps have their own accounts, which are deleted on the app&apos;s own page instead:
+        </p>
+      </OwnPolicies>
 
       <h2>How to request deletion</h2>
       <p>You can use either option. You do not need to have the app installed.</p>

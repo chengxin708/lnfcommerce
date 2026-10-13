@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products, type Product } from "@/lib/products";
@@ -9,6 +10,14 @@ const STORE_LABELS = {
   googlePlay: "Get it on Google Play",
   tiktok: "Play on TikTok",
 } as const;
+
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  );
+}
 
 export function find(kind: Product["kind"], slug: string) {
   return products.find((p) => p.kind === kind && p.slug === slug);
@@ -39,13 +48,16 @@ export function ProductPage({ kind, slug }: { kind: Product["kind"]; slug: strin
       </p>
       <p>{product.description}</p>
 
-      {storeLinks.length > 0 ? (
+      {product.website || storeLinks.length > 0 ? (
         <ul>
+          {product.website && (
+            <li>
+              <ExternalLink href={product.website}>Open {product.name} on the web</ExternalLink>
+            </li>
+          )}
           {storeLinks.map((key) => (
             <li key={key}>
-              <a href={product.links[key]} target="_blank" rel="noopener noreferrer">
-                {STORE_LABELS[key]}
-              </a>
+              <ExternalLink href={product.links[key]!}>{STORE_LABELS[key]}</ExternalLink>
             </li>
           ))}
         </ul>
@@ -55,7 +67,23 @@ export function ProductPage({ kind, slug }: { kind: Product["kind"]; slug: strin
 
       <h2>Privacy</h2>
       <p>
-        {product.name} follows the <Link href="/privacy">{site.legalName} Privacy Policy</Link>.
+        {product.privacyUrl ? (
+          <>
+            {product.name} has its own{" "}
+            <ExternalLink href={product.privacyUrl}>Privacy Policy</ExternalLink>.
+          </>
+        ) : (
+          <>
+            {product.name} follows the <Link href="/privacy">{site.legalName} Privacy Policy</Link>.
+          </>
+        )}
+        {product.termsUrl && (
+          <>
+            {" "}
+            Its use is governed by its own{" "}
+            <ExternalLink href={product.termsUrl}>Terms of Service</ExternalLink>.
+          </>
+        )}
       </p>
       {product.extraData && product.extraData.length > 0 && (
         <>
@@ -70,8 +98,22 @@ export function ProductPage({ kind, slug }: { kind: Product["kind"]; slug: strin
 
       <h2>Support</h2>
       <p>
-        Email <span className="select-all">{site.supportEmail}</span> and mention {product.name}.
-        To delete your account or data, see <Link href="/delete-account">Delete your account</Link>.
+        {product.supportEmail ? (
+          <>
+            Email <span className="select-all">{product.supportEmail}</span>.
+          </>
+        ) : (
+          <>
+            Email <span className="select-all">{site.supportEmail}</span> and mention {product.name}.
+          </>
+        )}{" "}
+        To delete your account or data, see{" "}
+        {product.deleteAccountUrl ? (
+          <ExternalLink href={product.deleteAccountUrl}>Delete your {product.name} account</ExternalLink>
+        ) : (
+          <Link href="/delete-account">Delete your account</Link>
+        )}
+        .
       </p>
     </article>
   );

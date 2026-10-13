@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { OwnPolicies } from "@/components/OwnPolicies";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -18,6 +19,10 @@ export default function TermsPage() {
         and this website (together, the &quot;Services&quot;). By using the Services, you agree to
         these terms. If you do not agree, do not use the Services.
       </p>
+
+      <OwnPolicies field="termsUrl">
+        <p>These apps have their own terms, which apply to them instead of these:</p>
+      </OwnPolicies>
 
       <h2>1. Who can use the Services</h2>
       <p>
