@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+/* Layout: single centered column (~68ch), header + footer, no decoration. */
+:root {
+  --paper: #f5f6fa;
+  --surface: #ffffff;
+  --ink: #141a2e;
+  --muted: #5a6178;
+  --line: #dde0ea;
+  --cobalt: #2747d9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #0f1322;
+    --surface: #161b2e;
+    --ink: #e8eaf3;
+    --muted: #9aa1b8;
+    --line: #2a3150;
+    --cobalt: #7d95ff;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --font-sans: var(--font-figtree);
+}
+
+/* Base element styles live in the base layer so Tailwind utilities can override them. */
+@layer base {
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-figtree), system-ui, sans-serif;
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--cobalt);
+    text-underline-offset: 3px;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--cobalt);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+.wrap {
+  width: 100%;
+  max-width: 68rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+/* Legal / long-form text */
+.prose {
+  max-width: 68ch;
+}
+
+.prose h1 {
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  font-weight: 700;
+  line-height: 1.2;
+  text-wrap: balance;
+}
+
+.prose h2 {
+  margin-top: 2.25rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+.prose h3 {
+  margin-top: 1.5rem;
+  font-weight: 700;
+}
+
+.prose p,
+.prose ul {
+  margin-top: 0.75rem;
+}
+
+.prose ul {
+  padding-left: 1.25rem;
+  list-style: disc;
+}
+
+.prose li + li {
+  margin-top: 0.35rem;
+}
+
+.prose .meta {
+  margin-top: 0.5rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
