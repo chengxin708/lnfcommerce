@@ -43,6 +43,17 @@ export const products: Product[] = [
     deleteAccountUrl: "https://breezebiz.app/delete-account",
     supportEmail: "support@breezebiz.app",
   },
+  {
+    slug: "qbouncy-kingdom",
+    name: "QBouncy Kingdom",
+    kind: "game",
+    tagline: "Link jellies and wake up the kingdom.",
+    description:
+      "QBouncy Kingdom is a link-and-match puzzle game. Draw a line through three or more jellies of the same color, in any of eight directions, to pop them. Long chains turn into special jellies that clear rows, blast areas or change colors. Beat the bosses of the Gray Fog across 100 levels in five worlds. Free to play, no account needed, and it works offline.",
+    status: "coming-soon",
+    links: {},
+    packageName: "com.lnfcommerce.qkingdom",
+  },
 ];
 
 export function productPath(p: Pick<Product, "kind" | "slug">) {
