@@ -50,8 +50,10 @@ export const products: Product[] = [
     tagline: "Link jellies and wake up the kingdom.",
     description:
       "QBouncy Kingdom is a link-and-match puzzle game. Draw a line through three or more jellies of the same color, in any of eight directions, to pop them. Long chains turn into special jellies that clear rows, blast areas or change colors. Beat the bosses of the Gray Fog across 100 levels in five worlds. Free to play, no account needed, and it works offline.",
-    status: "coming-soon",
-    links: {},
+    status: "live",
+    links: {
+      googlePlay: "https://play.google.com/store/apps/details?id=com.lnfcommerce.qkingdom",
+    },
     packageName: "com.lnfcommerce.qkingdom",
   },
 ];
