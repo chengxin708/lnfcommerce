@@ -16,6 +16,10 @@ export const metadata: Metadata = {
     template: `%s · ${site.brand}`,
   },
   description: `${site.legalName} publishes mobile apps and games on the App Store, Google Play and other platforms.`,
+  verification: {
+    // Meta Business portfolio "LNF Commerce Inc" domain verification.
+    other: { "facebook-domain-verification": "mrzuflhw60si9m3fx7se6dp6lj2zi1" },
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
