@@ -99,7 +99,8 @@ export default function PrivacyPage() {
 
       <h2>Advertising partners and service providers</h2>
       <p>
-        Some of our apps show ads from <strong>Google AdMob</strong> (on iOS and Android) or{" "}
+        Some of our apps show ads from <strong>Google AdMob</strong> (on iOS and Android),{" "}
+        <strong>Unity LevelPlay</strong> (Unity Ads and ironSource Ads, on Android) or{" "}
         <strong>TikTok</strong> (in TikTok Mini Games). These partners may collect device and
         advertising identifiers to show and measure ads, and may show personalized ads where the law
         allows and you have not opted out. Their use of data is governed by their own policies:
@@ -109,6 +110,12 @@ export default function PrivacyPage() {
           Google:{" "}
           <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">
             How Google uses information from sites or apps that use its services
+          </a>
+        </li>
+        <li>
+          Unity:{" "}
+          <a href="https://unity.com/legal/game-player-and-app-user-privacy-policy" target="_blank" rel="noopener noreferrer">
+            Unity Game Player and App User Privacy Policy
           </a>
         </li>
         <li>

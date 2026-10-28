@@ -56,6 +56,22 @@ export const products: Product[] = [
     },
     packageName: "com.lnfcommerce.qkingdom",
   },
+  {
+    slug: "timber-siege",
+    name: "Timber Siege: Hold Till Dawn",
+    kind: "game",
+    tagline: "Chop by day, defend your lodge by night.",
+    description:
+      "Timber Siege is a cozy action-defense game. Gather wood by day, repair your fence and build towers, then hold off waves of boars, wolves, bears, rhinos and rock monkeys until the sun comes up. Pick a hero, upgrade your lodge across ten levels, and play alone or with friends in online co-op. Free to play, no account needed.",
+    status: "coming-soon",
+    links: {},
+    packageName: "com.lnfcommerce.timbersiege",
+    extraData: [
+      "Anonymous play statistics (game opened, time played, ads watched) sent to our own server. They are not linked to your name or account.",
+      "Online co-op: while you play with friends, a room code, your hero choice and the live game state are relayed through our game server.",
+      "Optional save code: if you create one, your game progress is stored on our server under that code so you can restore it on another device.",
+    ],
+  },
 ];
 
 export function productPath(p: Pick<Product, "kind" | "slug">) {
