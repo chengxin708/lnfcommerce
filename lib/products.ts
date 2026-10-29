@@ -7,6 +7,7 @@ export type Product = {
   name: string; // store listing title, or its brand part (e.g. "BreezeBiz" for "BreezeBiz: Bills & Bookings")
   kind: "app" | "game";
   tagline: string;
+  icon?: string; // square icon under /public, shown on the product cards
   description: string;
   status: "live" | "coming-soon";
   links: {
@@ -29,6 +30,7 @@ export type Product = {
 export const products: Product[] = [
   {
     slug: "breezebiz",
+    icon: "/products/breezebiz.png",
     name: "BreezeBiz",
     kind: "app",
     tagline: "Run your shop from your phone.",
@@ -45,6 +47,7 @@ export const products: Product[] = [
   },
   {
     slug: "qbouncy-kingdom",
+    icon: "/products/qbouncy-kingdom.png",
     name: "QBouncy Kingdom",
     kind: "game",
     tagline: "Link jellies and wake up the kingdom.",
@@ -58,6 +61,7 @@ export const products: Product[] = [
   },
   {
     slug: "timber-siege",
+    icon: "/products/timber-siege.png",
     name: "Timber Siege: Hold Till Dawn",
     kind: "game",
     tagline: "Chop by day, defend your lodge by night.",
