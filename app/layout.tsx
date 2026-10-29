@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Figtree } from "next/font/google";
 import { site } from "@/lib/site";
@@ -31,8 +32,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         <header className="border-b border-[var(--line)]">
           <div className="wrap flex flex-wrap items-center justify-between gap-x-6 gap-y-2 py-4">
-            <Link href="/" className="text-[15px] font-bold text-[var(--ink)] no-underline">
-              {site.brand}
+            <Link href="/" aria-label={site.brand} className="flex items-center no-underline">
+              {/* Light / dark versions of the LNF COMMERCE logo (same circuit-trace mark as LNF IT Services) */}
+              <Image src="/logo.png" alt={site.brand} width={1000} height={452} priority className="h-8 w-auto dark:hidden sm:h-9" />
+              <Image src="/logo-dark.png" alt="" aria-hidden width={1000} height={452} priority className="hidden h-8 w-auto dark:block sm:h-9" />
             </Link>
             <nav className="flex flex-wrap gap-x-5 gap-y-1 text-[15px]">
               <Link href="/apps" className="text-[var(--ink)] no-underline hover:text-[var(--cobalt)]">
