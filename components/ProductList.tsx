@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { products, productPath, type Product } from "@/lib/products";
+import { formatDate, products, productPath, type Product } from "@/lib/products";
 import { cardCls, monoLabel } from "@/components/ui";
 
 const STORE_LABEL: Record<keyof Product["links"], string> = {
@@ -36,7 +36,9 @@ export function ProductList({ kind }: { kind: Product["kind"] }) {
               </span>
             </div>
             <h3 className="mt-4 text-base font-semibold text-ink group-hover:text-accent">{p.name}</h3>
-            <p className={`${monoLabel} mt-1 text-ink-3`}>{p.kind === "app" ? "App" : "Game"}</p>
+            <p className={`${monoLabel} mt-1 text-ink-3`}>
+              {p.kind === "app" ? "App" : "Game"} · Added {formatDate(p.added)}
+            </p>
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{p.tagline}</p>
             {stores.length > 0 && (
               <div className="mt-auto flex flex-wrap gap-1.5 pt-4">

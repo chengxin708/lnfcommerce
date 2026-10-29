@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { products, type Product } from "@/lib/products";
+import { products, type Product, formatDate } from "@/lib/products";
 import { site } from "@/lib/site";
 
 const STORE_LABELS = {
@@ -44,7 +44,7 @@ export function ProductPage({ kind, slug }: { kind: Product["kind"]; slug: strin
     <article className="wrap prose py-12">
       <h1>{product.name}</h1>
       <p className="meta">
-        {kind === "game" ? "Game" : "App"} by {site.legalName}
+        {kind === "game" ? "Game" : "App"} by {site.legalName} · Added {formatDate(product.added)}
       </p>
       <p>{product.description}</p>
 

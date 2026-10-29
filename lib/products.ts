@@ -8,6 +8,7 @@ export type Product = {
   kind: "app" | "game";
   tagline: string;
   icon?: string; // square icon under /public, shown on the product cards
+  added: string; // YYYY-MM-DD the product was first listed on this site
   description: string;
   status: "live" | "coming-soon";
   links: {
@@ -31,6 +32,7 @@ export const products: Product[] = [
   {
     slug: "breezebiz",
     icon: "/products/breezebiz.png",
+    added: "2026-10-13",
     name: "BreezeBiz",
     kind: "app",
     tagline: "Run your shop from your phone.",
@@ -48,6 +50,7 @@ export const products: Product[] = [
   {
     slug: "qbouncy-kingdom",
     icon: "/products/qbouncy-kingdom.png",
+    added: "2026-10-13",
     name: "QBouncy Kingdom",
     kind: "game",
     tagline: "Link jellies and wake up the kingdom.",
@@ -62,6 +65,7 @@ export const products: Product[] = [
   {
     slug: "timber-siege",
     icon: "/products/timber-siege.png",
+    added: "2026-10-28",
     name: "Timber Siege: Hold Till Dawn",
     kind: "game",
     tagline: "Chop by day, defend your lodge by night.",
@@ -80,4 +84,9 @@ export const products: Product[] = [
 
 export function productPath(p: Pick<Product, "kind" | "slug">) {
   return `/${p.kind === "game" ? "games" : "apps"}/${p.slug}`;
+}
+
+/** "Oct 13, 2026" for a YYYY-MM-DD date (fixed to UTC so it never shifts a day). */
+export function formatDate(iso: string): string {
+  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
