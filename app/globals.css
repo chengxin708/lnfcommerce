@@ -95,13 +95,19 @@
 }
 
 .prose p,
-.prose ul {
+.prose ul,
+.prose ol {
   margin-top: 0.75rem;
 }
 
 .prose ul {
   padding-left: 1.25rem;
   list-style: disc;
+}
+
+.prose ol {
+  padding-left: 1.5rem;
+  list-style: decimal;
 }
 
 .prose li + li {

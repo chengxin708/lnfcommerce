@@ -78,6 +78,10 @@ export default function TermsPage() {
         our apps for your own non-commercial purposes. We and our licensors own the apps, including
         their code, design, artwork, music, characters and trademarks.
       </p>
+      <p>
+        If you believe something in our apps infringes your copyright or trademark, see{" "}
+        <Link href="/copyright">how to report it</Link>.
+      </p>
 
       <h2>4. Your content and account</h2>
       <p>

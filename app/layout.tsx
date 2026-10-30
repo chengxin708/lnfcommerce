@@ -93,6 +93,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
                 <Link href="/support" className={navLink}>
                   Support
                 </Link>
+                <Link href="/copyright" className={navLink}>
+                  Copyright
+                </Link>
                 <Link href="/delete-account" className={navLink}>
                   Delete account
                 </Link>
