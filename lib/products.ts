@@ -71,8 +71,10 @@ export const products: Product[] = [
     tagline: "Chop by day, defend your lodge by night.",
     description:
       "Timber Siege is a cozy action-defense game. Gather wood by day, repair your fence and build towers, then hold off waves of boars, wolves, bears, rhinos and rock monkeys until the sun comes up. Pick a hero, upgrade your lodge across ten levels, and play alone or with friends in online co-op. Free to play, no account needed.",
-    status: "coming-soon",
-    links: {},
+    status: "live",
+    links: {
+      googlePlay: "https://play.google.com/store/apps/details?id=com.lnfcommerce.timbersiege",
+    },
     packageName: "com.lnfcommerce.timbersiege",
     extraData: [
       "Anonymous play statistics (game opened, time played, ads watched) sent to our own server. They are not linked to your name or account.",
