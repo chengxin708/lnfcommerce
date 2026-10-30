@@ -90,3 +90,11 @@ export function productPath(p: Pick<Product, "kind" | "slug">) {
 export function formatDate(iso: string): string {
   return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 }
+
+/** Days a product keeps its "New" badge after its `added` date. */
+const NEW_DAYS = 30;
+
+/** True while the product was added within the last NEW_DAYS days. Pages that show it revalidate daily so the badge drops off on its own. */
+export function isNew(p: Pick<Product, "added">, now = Date.now()): boolean {
+  return now - Date.parse(`${p.added}T00:00:00Z`) < NEW_DAYS * 86_400_000;
+}

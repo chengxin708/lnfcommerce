@@ -2,6 +2,9 @@ import { ProductList } from "@/components/ProductList";
 import { Folio, btnPrimary, btnSecondary, cardCls, monoLabel } from "@/components/ui";
 import { site } from "@/lib/site";
 
+// Re-render daily so the "New" badge on product cards expires on its own.
+export const revalidate = 86400;
+
 // Home page in the lnfitservices.com style: type-led hero, numbered mono folios, card grids.
 export default function Home() {
   return (

@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { ProductList } from "@/components/ProductList";
 
+// Re-render daily so the "New" badge on product cards expires on its own.
+export const revalidate = 86400;
+
 export const metadata: Metadata = {
   title: "Games",
 };

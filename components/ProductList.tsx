@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatDate, products, productPath, type Product } from "@/lib/products";
+import { formatDate, isNew, products, productPath, type Product } from "@/lib/products";
 import { cardCls, monoLabel } from "@/components/ui";
 
 const STORE_LABEL: Record<keyof Product["links"], string> = {
@@ -31,8 +31,13 @@ export function ProductList({ kind }: { kind: Product["kind"] }) {
                   {p.name[0]}
                 </span>
               )}
-              <span className={`${monoLabel} ${p.status === "live" ? "text-accent" : "text-ink-3"}`}>
-                {p.status === "live" ? "Live" : "Coming soon"}
+              <span className="flex items-center gap-2">
+                {isNew(p) && (
+                  <span className={`${monoLabel} rounded-md bg-accent px-1.5 py-0.5 text-on-ink`}>New</span>
+                )}
+                <span className={`${monoLabel} ${p.status === "live" ? "text-accent" : "text-ink-3"}`}>
+                  {p.status === "live" ? "Live" : "Coming soon"}
+                </span>
               </span>
             </div>
             <h3 className="mt-4 text-base font-semibold text-ink group-hover:text-accent">{p.name}</h3>
