@@ -22,7 +22,7 @@ async function decrypt(enc: Enc, pass: string): Promise<string> {
   return new TextDecoder().decode(plain);
 }
 
-export function StatusGate() {
+export function StatusGate({ src = "/status.enc.json" }: { src?: string }) {
   const [pass, setPass] = useState("");
   const [html, setHtml] = useState<string | null>(null);
   const [state, setState] = useState<"idle" | "busy" | "wrong">("idle");
@@ -31,7 +31,7 @@ export function StatusGate() {
     e.preventDefault();
     setState("busy");
     try {
-      const enc = (await (await fetch("/status.enc.json", { cache: "no-store" })).json()) as Enc;
+      const enc = (await (await fetch(src, { cache: "no-store" })).json()) as Enc;
       setHtml(await decrypt(enc, pass));
     } catch {
       setState("wrong");
