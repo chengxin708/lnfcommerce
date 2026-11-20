@@ -17,6 +17,7 @@ export function ProductList({ kind }: { kind: Product["kind"] }) {
     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
       {items.map((p) => {
         const stores = (Object.keys(p.links) as (keyof Product["links"])[]).filter((k) => p.links[k]);
+        const platforms = [...(p.website ? ["Web"] : []), ...stores.map((k) => STORE_LABEL[k])];
         return (
           <Link
             key={p.slug}
@@ -45,11 +46,11 @@ export function ProductList({ kind }: { kind: Product["kind"] }) {
               {p.kind === "app" ? "App" : "Game"} · Added {formatDate(p.added)}
             </p>
             <p className="mt-3 text-sm leading-relaxed text-ink-2">{p.tagline}</p>
-            {stores.length > 0 && (
+            {platforms.length > 0 && (
               <div className="mt-auto flex flex-wrap gap-1.5 pt-4">
-                {stores.map((k) => (
-                  <span key={k} className="rounded-md border border-line px-2 py-0.5 font-mono text-[11px] text-ink-2">
-                    {STORE_LABEL[k]}
+                {platforms.map((label) => (
+                  <span key={label} className="rounded-md border border-line px-2 py-0.5 font-mono text-[11px] text-ink-2">
+                    {label}
                   </span>
                 ))}
               </div>

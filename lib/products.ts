@@ -82,6 +82,25 @@ export const products: Product[] = [
       "Optional save code: if you create one, your game progress is stored on our server under that code so you can restore it on another device.",
     ],
   },
+  {
+    slug: "tables-set",
+    icon: "/products/tables-set.png",
+    added: "2026-11-20",
+    name: "Table's Set",
+    kind: "game",
+    tagline: "Play Mahjong and Hold'em together—no tiles or chips needed.",
+    description:
+      "Table's Set turns your phones into a full set of tiles, cards and play-for-fun chips when friends gather around a table. Host a 4-player Mahjong match or a 2-to-9-player Texas Hold'em table, let everyone scan a QR code or enter a 4-digit room code to take their seat in the browser, and optionally place a tablet or TV in the middle as a shared table screen. Includes solo practice with computer players, a built-in hand and tenpai guide, spoken tile calls, optional peer-to-peer voice chat, and an offline scorekeeper for physical Mahjong sets. In English and Chinese. Free to play, with virtual chips that have no cash value.",
+    status: "live",
+    links: {},
+    packageName: "com.lnfcommerce.tablesset",
+    website: "https://tablesset.lnfcommerce.com",
+    extraData: [
+      "Live table play: while you are in a room, your table display name, seat, room code and live hand state are relayed through our game server so everyone at the table stays in sync.",
+      "Optional account: you can play as a guest, or sign in with email, Google or Apple to keep your display name and saved player nicknames across devices. You can delete your account at any time inside the app (Account → Delete Account).",
+      "Optional voice chat: if you join table voice chat, audio streams peer-to-peer between players in the room over WebRTC and is not recorded or stored by us.",
+    ],
+  },
 ];
 
 export function productPath(p: Pick<Product, "kind" | "slug">) {
