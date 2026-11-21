@@ -11,7 +11,7 @@ export default function PrivacyPage() {
   return (
     <article className="wrap prose py-12">
       <h1>Privacy Policy</h1>
-      <p className="meta">Effective {site.policiesEffective}</p>
+      <p className="meta">Effective November 21, 2026</p>
 
       <p>
         This policy explains what information {site.legalName} (&quot;we&quot;, &quot;us&quot;)
@@ -59,6 +59,13 @@ export default function PrivacyPage() {
       <h3>Information created while you use our apps</h3>
       <ul>
         <li>Game progress, scores, settings and in-app items.</li>
+        <li>
+          <strong>Favorites count (Little Field Guide):</strong> when you tap the heart on an
+          animal, the app sends a random install number and the animal&apos;s ID to our server so
+          we can show how many people have favorited it. The install number is created by the app,
+          is not linked to your name, account, device ID or advertising ID, and is deleted when you
+          remove the app. We do not use it for advertising and do not share it.
+        </li>
         <li>
           Purchase and subscription records: what you bought, when, and the order ID from the
           platform. We do not receive or store your card or bank details. Payments are processed
