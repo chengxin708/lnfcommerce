@@ -1,8 +1,10 @@
 import Image from "next/image";
 import Link from "next/link";
+import QRCode from "qrcode";
 import type { Listing, Product } from "@/lib/products";
 import { site } from "@/lib/site";
 import { cardCls, monoLabel } from "@/components/ui";
+import { StoreButton } from "@/components/StoreButton";
 
 // App Store–style product page: icon header with the store buttons, a facts strip,
 // a row of screenshots, the description in sections, and an information table.
@@ -13,22 +15,16 @@ const STORES = [
   { key: "googlePlay", small: "Get it on", big: "Google Play" },
 ] as const;
 
-function StoreButtons({ product }: { product: Product }) {
+type StoreKey = (typeof STORES)[number]["key"];
+
+/** The store buttons. A click opens the store link as a QR code (see StoreButton). */
+function StoreButtons({ product, qr }: { product: Product; qr: Partial<Record<StoreKey, string>> }) {
   const stores = STORES.filter((s) => product.links[s.key]);
   if (stores.length === 0) return null;
   return (
     <div className="flex flex-wrap gap-3">
       {stores.map((s) => (
-        <a
-          key={s.key}
-          href={product.links[s.key]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex min-w-[9.5rem] flex-1 flex-col rounded-xl sm:flex-none sm:min-w-[10.5rem] bg-ink px-5 py-2 leading-tight text-on-ink no-underline shadow-card transition-colors hover:bg-ink/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-canvas"
-        >
-          <span className="text-[11px] text-on-ink/75">{s.small}</span>
-          <span className="text-lg font-semibold tracking-tight">{s.big}</span>
-        </a>
+        <StoreButton key={s.key} href={product.links[s.key]!} small={s.small} big={s.big} qrSvg={qr[s.key] ?? ""} />
       ))}
     </div>
   );
@@ -38,8 +34,14 @@ function SectionTitle({ children }: { children: string }) {
   return <h2 className="text-xl font-semibold tracking-tight text-ink">{children}</h2>;
 }
 
-export function StoreListing({ product }: { product: Product & { listing: Listing } }) {
+export async function StoreListing({ product }: { product: Product & { listing: Listing } }) {
   const { listing } = product;
+  // QR codes of the store links, drawn once on the server as SVG (dark modules in the site's ink colour).
+  const qr: Partial<Record<StoreKey, string>> = {};
+  for (const s of STORES) {
+    const url = product.links[s.key];
+    if (url) qr[s.key] = await QRCode.toString(url, { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#1f2230", light: "#ffffff" } });
+  }
   const shot = listing.screenshotSize;
   const structured = {
     "@context": "https://schema.org",
@@ -76,13 +78,13 @@ export function StoreListing({ product }: { product: Product & { listing: Listin
           </p>
           <p className="mt-1 hidden text-sm text-ink-3 sm:block">{listing.price}</p>
           <div className="mt-5 hidden sm:block">
-            <StoreButtons product={product} />
+            <StoreButtons product={product} qr={qr} />
           </div>
         </div>
       </header>
       {/* On phones the buttons sit under the header, full width */}
       <div className="mt-5 sm:hidden">
-        <StoreButtons product={product} />
+        <StoreButtons product={product} qr={qr} />
         <p className="mt-2 text-sm text-ink-3">{listing.price}</p>
       </div>
 
@@ -187,7 +189,7 @@ export function StoreListing({ product }: { product: Product & { listing: Listin
           <Link href="/delete-account">Delete your data</Link>.
         </p>
         <div className="mt-6">
-          <StoreButtons product={product} />
+          <StoreButtons product={product} qr={qr} />
         </div>
       </section>
     </article>
