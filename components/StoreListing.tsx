@@ -5,6 +5,7 @@ import type { Listing, Product } from "@/lib/products";
 import { site } from "@/lib/site";
 import { cardCls, monoLabel } from "@/components/ui";
 import { StoreButton } from "@/components/StoreButton";
+import { ShareQrButton } from "@/components/ShareQrButton";
 
 // App Store–style product page: icon header with the store buttons, a facts strip,
 // a row of screenshots, the description in sections, and an information table.
@@ -17,15 +18,25 @@ const STORES = [
 
 type StoreKey = (typeof STORES)[number]["key"];
 
-/** The store buttons. A click opens the store link as a QR code (see StoreButton). */
-function StoreButtons({ product, qr }: { product: Product; qr: Partial<Record<StoreKey, string>> }) {
+type Share = { url: string; qrSvg: string };
+
+/**
+ * The store buttons, and under them "Share QR code": one code for any phone, to show a friend.
+ * On a computer a click on a store button opens that store's link as a QR code (see StoreButton).
+ */
+function StoreButtons({ product, qr, share }: { product: Product; qr: Partial<Record<StoreKey, string>>; share: Share }) {
   const stores = STORES.filter((s) => product.links[s.key]);
   if (stores.length === 0) return null;
   return (
-    <div className="flex flex-wrap gap-3">
-      {stores.map((s) => (
-        <StoreButton key={s.key} href={product.links[s.key]!} small={s.small} big={s.big} qrSvg={qr[s.key] ?? ""} />
-      ))}
+    <div>
+      <div className="flex flex-wrap gap-3">
+        {stores.map((s) => (
+          <StoreButton key={s.key} href={product.links[s.key]!} small={s.small} big={s.big} qrSvg={qr[s.key] ?? ""} />
+        ))}
+      </div>
+      <div className="mt-3">
+        <ShareQrButton name={product.name} url={share.url} qrSvg={share.qrSvg} />
+      </div>
     </div>
   );
 }
@@ -42,6 +53,9 @@ export async function StoreListing({ product }: { product: Product & { listing: 
     const url = product.links[s.key];
     if (url) qr[s.key] = await QRCode.toString(url, { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#1f2230", light: "#ffffff" } });
   }
+  // One link for any phone (app/get/[slug]/route.ts sends each device to its own store).
+  const shareUrl = `${site.url}/get/${product.slug}`;
+  const share: Share = { url: shareUrl, qrSvg: await QRCode.toString(shareUrl, { type: "svg", margin: 1, errorCorrectionLevel: "M", color: { dark: "#1f2230", light: "#ffffff" } }) };
   const shot = listing.screenshotSize;
   const structured = {
     "@context": "https://schema.org",
@@ -78,13 +92,13 @@ export async function StoreListing({ product }: { product: Product & { listing: 
           </p>
           <p className="mt-1 hidden text-sm text-ink-3 sm:block">{listing.price}</p>
           <div className="mt-5 hidden sm:block">
-            <StoreButtons product={product} qr={qr} />
+            <StoreButtons product={product} qr={qr} share={share} />
           </div>
         </div>
       </header>
       {/* On phones the buttons sit under the header, full width */}
       <div className="mt-5 sm:hidden">
-        <StoreButtons product={product} qr={qr} />
+        <StoreButtons product={product} qr={qr} share={share} />
         <p className="mt-2 text-sm text-ink-3">{listing.price}</p>
       </div>
 
@@ -189,7 +203,7 @@ export async function StoreListing({ product }: { product: Product & { listing: 
           <Link href="/delete-account">Delete your data</Link>.
         </p>
         <div className="mt-6">
-          <StoreButtons product={product} qr={qr} />
+          <StoreButtons product={product} qr={qr} share={share} />
         </div>
       </section>
     </article>
