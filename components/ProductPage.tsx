@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { products, type Product, formatDate } from "@/lib/products";
 import { site } from "@/lib/site";
+import { StoreListing } from "@/components/StoreListing";
 
 const STORE_LABELS = {
   appStore: "Download on the App Store",
@@ -29,12 +30,19 @@ export function staticParams(kind: Product["kind"]) {
 
 export function productMetadata(kind: Product["kind"], slug: string): Metadata {
   const product = find(kind, slug);
-  return product ? { title: product.name, description: product.tagline } : {};
+  if (!product) return {};
+  return {
+    title: product.name,
+    description: product.tagline,
+    ...(product.icon ? { openGraph: { title: product.name, description: product.tagline, images: [product.icon] } } : {}),
+  };
 }
 
 export function ProductPage({ kind, slug }: { kind: Product["kind"]; slug: string }) {
   const product = find(kind, slug);
   if (!product) notFound();
+  // Products with an App Store–style listing get that page instead of the plain one below.
+  if (product.listing) return <StoreListing product={{ ...product, listing: product.listing }} />;
 
   const storeLinks = (Object.keys(STORE_LABELS) as (keyof typeof STORE_LABELS)[]).filter(
     (key) => product.links[key],

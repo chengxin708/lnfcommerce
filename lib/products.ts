@@ -26,9 +26,130 @@ export type Product = {
   termsUrl?: string;
   deleteAccountUrl?: string;
   supportEmail?: string;
+  // Set this to give the product an App Store–style page (icon header, store buttons,
+  // facts strip, screenshots, sectioned description, information table) instead of the
+  // plain text page. Keep the facts in step with the live store listings.
+  listing?: Listing;
+};
+
+export type Listing = {
+  subtitle: string; // one line under the name
+  price: string; // e.g. "Free · In-App Purchases"
+  facts: { label: string; value: string; note?: string }[]; // the strip under the header
+  screenshots: { src: string; alt: string }[]; // portrait phone shots under /public, all the same size
+  screenshotSize: { width: number; height: number };
+  intro: string[]; // opening paragraphs of the description
+  sections: { title: string; points: string[] }[];
+  information: { label: string; value: string }[];
 };
 
 export const products: Product[] = [
+  {
+    slug: "little-field-guide",
+    icon: "/products/little-field-guide.png",
+    added: "2026-11-27",
+    name: "Little Field Guide: Dino & Co.",
+    kind: "app",
+    tagline: "From T. rex to blue whales: real-size 3D dinosaurs, dog breeds and sea animals.",
+    description:
+      "Little Field Guide is a 3D animal encyclopedia where every creature is shown at its real size. Explore 260+ dinosaurs, prehistoric animals, dog breeds and ocean animals in detailed 3D habitats, compare their sizes face to face, learn museum-style facts in nine languages, and cast a one-tap Animal Parade to your TV. Free with ads, no account needed.",
+    status: "live",
+    links: {
+      appStore: "https://apps.apple.com/app/id6835717538",
+      googlePlay: "https://play.google.com/store/apps/details?id=com.lnfcommerce.littlefieldguide",
+    },
+    packageName: "com.lnfcommerce.littlefieldguide",
+    extraData: [
+      "Favorites count: when you tap the heart on an animal, the app sends a random install number and the animal's ID to our server so we can show how many people have favorited it. The number is not linked to your name, account, device ID or advertising ID.",
+      "Ads: the free version shows ads through Google AdMob. A one-time purchase removes them.",
+    ],
+    listing: {
+      subtitle: "Real-size 3D animals and a parade for your TV",
+      price: "Free · Offers In-App Purchases",
+      facts: [
+        { label: "Age", value: "4+", note: "Years old" },
+        { label: "Category", value: "Education", note: "Reference" },
+        { label: "Animals", value: "260+", note: "In real-size 3D" },
+        { label: "Languages", value: "9", note: "EN, ZH, ES and 6 more" },
+        { label: "Account", value: "None", note: "No sign-in" },
+      ],
+      screenshotSize: { width: 660, height: 1434 },
+      screenshots: [
+        { src: "/products/little-field-guide/01-meet.webp", alt: "A T. rex in 3D next to an adult for scale" },
+        { src: "/products/little-field-guide/02-home.webp", alt: "The four worlds: dinosaurs, dogs, prehistoric life and ocean" },
+        { src: "/products/little-field-guide/03-parade.webp", alt: "The Animal Parade show" },
+        { src: "/products/little-field-guide/04-compare.webp", alt: "Two animals compared side by side" },
+        { src: "/products/little-field-guide/05-quiz.webp", alt: "The find-it quiz with three cards" },
+        { src: "/products/little-field-guide/06-wall.webp", alt: "The card wall with silhouettes to unlock" },
+        { src: "/products/little-field-guide/07-dog.webp", alt: "A dog breed in 3D" },
+        { src: "/products/little-field-guide/08-shark.webp", alt: "A shark in the ocean world" },
+        { src: "/products/little-field-guide/09-mammoth.webp", alt: "A woolly mammoth in the prehistoric world" },
+        { src: "/products/little-field-guide/10-learn.webp", alt: "Facts and questions about an animal" },
+      ],
+      intro: [
+        "Ever wondered how big a T. rex really was standing next to you? How a Chihuahua measures up to a Great Dane, or a great white shark to a blue whale?",
+        "Little Field Guide is a 3D animal encyclopedia where every creature is shown at its real size. Explore 260+ dinosaurs, prehistoric animals, dog breeds and ocean animals in detailed 3D habitats, compare their sizes face to face, learn museum-style facts, and cast a one-tap Animal Parade to your TV.",
+      ],
+      sections: [
+        {
+          title: "Real size in 3D",
+          points: [
+            "Every animal stands next to something familiar (an adult, a diver, a giraffe or the Statue of Liberty), so you feel at once how big or how tiny it really is.",
+            "Size comparison, face to face: T. rex vs. Triceratops, Chihuahua vs. Great Dane, shark vs. blue whale.",
+            "Spin 360°, zoom in, and tap to hear dinosaurs roar and dogs bark.",
+          ],
+        },
+        {
+          title: "One-tap Animal Parade on your TV",
+          points: [
+            "Tap Show: the animals walk onstage one by one, strike a pose and say their names, with music.",
+            "Cast it to your TV and use your phone as the remote. A natural history show for the whole family.",
+          ],
+        },
+        {
+          title: "Four worlds to explore",
+          points: [
+            "Dinosaurs: 80 dinosaurs, from tiny Microraptor to giant Patagotitan, with T. rex, Triceratops, Spinosaurus, Velociraptor and Brachiosaurus.",
+            "Prehistoric animals: pterosaurs, ancient sea reptiles, Ice Age giants like the woolly mammoth, and the first sea creatures.",
+            "Dog breeds: 57 dog breeds with origin, breed group and real size.",
+            "Ocean animals: 80+ sea animals and plants, from clownfish and sea turtles to sharks and whales.",
+            "New animals arrive over the air, with no app update needed.",
+          ],
+        },
+        {
+          title: "Meet them all, collect every card",
+          points: [
+            "Every animal starts as a mystery silhouette card. Meet it to unlock it and watch your collection grow.",
+            "Find-it quiz: hear a name, pick the right card out of three, and the real 3D animal steps out and roars.",
+          ],
+        },
+        {
+          title: "Facts in 9 languages",
+          points: [
+            "Museum-style facts for every animal (length, height, weight, diet, era and habitat), plus answers to the questions people actually ask.",
+            "Read and listen in two languages side by side: English, Spanish, Chinese, French, Korean, Russian, Vietnamese, Filipino and Arabic.",
+          ],
+        },
+        {
+          title: "Good to know",
+          points: [
+            "Free to download, with ads. One purchase removes ads forever; no content is locked.",
+            "No account and no sign-in. Animals you have seen stay on your device for offline viewing.",
+            "Sizes follow mainstream published estimates. 3D models, art and narration are made with AI tools and checked by our team.",
+          ],
+        },
+      ],
+      information: [
+        { label: "Provider", value: "LNF COMMERCE INC" },
+        { label: "Category", value: "Education, Reference" },
+        { label: "Compatibility", value: "iPhone and iPad with iOS 15 or later · Android 7.0 or later" },
+        { label: "Languages", value: "English, Chinese, Spanish, French, Korean, Russian, Vietnamese, Filipino, Arabic" },
+        { label: "Age rating", value: "4+" },
+        { label: "Price", value: "Free" },
+        { label: "In-app purchase", value: "Remove Ads, one-time" },
+      ],
+    },
+  },
   {
     slug: "breezebiz",
     icon: "/products/breezebiz.png",
